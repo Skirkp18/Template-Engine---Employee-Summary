@@ -25,9 +25,12 @@ const employeeQuestions = [
     {
         message: "Add Employee Email",
         name: "email"
-    },
+    }
+]
+
+const roleQuestion = [
     {
-        type: 'list', name: 'role', message:'Add New Employess Role', choices: ["Manager", "Engineer", "Intern"]
+        type: 'list', name: 'role', message:"Choose Employee's Role", choices: ["Engineer", "Intern"]
     }
 ]
 
@@ -62,34 +65,35 @@ const continueQuestion = [
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-function init() {
-    console.log(chalk.blue("Start Building Your Team!"))
-    console.log(chalk.blue("(Must add at least 1 employee"))
-    newEmployeeQuestions()
+async function init() {
+    try {
+    console.log(chalk.blue("Start Building Your Team!"));
+    console.log(chalk.blue("Start With Adding The Teams Manager"));
+    const manager = await inquirer.prompt(employeeQuestions);
+    let name = manager.name;
+    let id = manager.id
+    let email = manager.email;
+    newManager(name, id, email)
+    } catch (error) {
+        console.log("Error")
+        }
 }
 
-async function newEmployeeQuestions() {
+async function chooseEmployeeRole(employees) {
     try {
-        const employeeInfo = await inquirer.prompt(employeeQuestions)
-        // console.log(employeeInfo);
-        let name = employeeInfo.name;
-        let id = employeeInfo.id
-        let email = employeeInfo.email;
-        let role = employeeInfo.role;
+        const employeeRole = await inquirer.prompt(roleQuestion)
+        let role = employeeRole.role;
 
-        if (role === "Manager") {
-            newManager(name, id, email);
-        } else if (role === "Engineer") {
-            newEngineer(name, id, email);
+        if (role === "Engineer") {
+            newEngineer(employees);
         } else if (role === "Intern") {
-            newIntern(name, id, email);
+            newIntern(employees);
         } 
     } catch (error) {
         console.log("Error")
         }
-
-
 }
+
     
 
 async function newManager(name, id, email) {
@@ -104,13 +108,21 @@ async function newManager(name, id, email) {
     console.log(chalk.red("Manager Added!"))
     // 
 
-    contQuestion(employees);
+    chooseEmployeeRole(employees);
 }
 
-async function newEngineer(name, id, email) {
+async function newEngineer(employees) {
+    try {
+        const employeeInfo = await inquirer.prompt(employeeQuestions)
+        // console.log(employeeInfo);
+        let name = employeeInfo.name;
+        let id = employeeInfo.id
+        let email = employeeInfo.email;
+    
+
     const account = await inquirer.prompt(engineerQuestions);
     let github = account.github;
-
+    
     const newEngineer = new Engineer(name, id, email, github)
     console.log(newEngineer);
     employees.push(newEngineer);
@@ -119,10 +131,22 @@ async function newEngineer(name, id, email) {
     console.log(chalk.yellow("Engineer Added!"))
     // 
 
+} catch (error) {
+    console.log("Error")
+    }
+
     contQuestion(employees);
 }
 
-async function newIntern(name, id, email) {
+async function newIntern(employees) {
+    try { 
+        const employeeInfo = await inquirer.prompt(employeeQuestions)
+        // console.log(employeeInfo);
+        let name = employeeInfo.name;
+        let id = employeeInfo.id
+        let email = employeeInfo.email;
+
+        
     const education = await inquirer.prompt(internQuestions);
     let school = education.school;
 
@@ -133,7 +157,9 @@ async function newIntern(name, id, email) {
     // 
     console.log(chalk.green("Intern Added"))
     // 
-
+    } catch (error) {
+        console.log("Error")
+        }
     contQuestion(employees);
 }
 
@@ -146,7 +172,7 @@ async function contQuestion(employees) {
     writeToFile(html);
 
     } else {
-        newEmployeeQuestions(employees);
+        chooseEmployeeRole(employees);
     }
 }
 
