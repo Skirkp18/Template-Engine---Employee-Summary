@@ -3,7 +3,7 @@
 ![GitHub](https://img.shields.io/github/downloads/Skirkp18/Template-Engine---Employee-Summary/total) ![GitHub](https://img.shields.io/github/languages/top/Skirkp18/Template-Engine---Employee-Summary) ![GitHub](https://img.shields.io/badge/license-MIT-green?style=flat) 
 
 ## Description
-This is a program that prompts users for their information, prompts user for info about their team (name, emial, github), and then generates an HTML page that shows their info as well as their team members information.
+This program creates an HTML page that shows a users info as well as their teams info. The program will prompt user to create a manager. It will the prompt the user to choose the role of the employee under the manager as well as the employees information. You can then add more employee's or finish. When finished entering employees, the program generates an HTML page with the team as well as the teams information (role, name, etc.).
 ## Table of Contents 
   - [Installation](#installation)
   - [Usage](#usage)
@@ -17,7 +17,7 @@ To install necessary dependencies, run the following command:
 npm i or npm install
 ```
 ## Usage
-N/A
+Start the program, by running the app.js file using node.js. Enter information when asked. Once finished, HTML is generated as placed in the "output" folder.
 ## Contributing
 N/A
 ## Tests
