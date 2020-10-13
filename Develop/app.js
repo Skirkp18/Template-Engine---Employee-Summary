@@ -11,6 +11,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const employees = [];
+
 const employeeQuestions = [
     {
         message: "Add Employee Name",
@@ -32,7 +34,27 @@ const employeeQuestions = [
 const managerQuestions = [ 
     {
         message: "What is this Managers office number?",
-        name: "number"
+        name: "officeNumber"
+    }
+]
+
+const engineerQuestions = [
+    {
+        message: "What is the Engineers GitHub Username?",
+        name: "github"
+    }
+]
+
+const internQuestions = [
+    {
+        message: "What school is the Intern from?",
+        name: "school"
+    }
+]
+
+const continueQuestion = [
+    {
+        type: 'list', name: 'add', message:'Would You Like To Add Another Employee', choices: ["Yes", "No"]
     }
 ]
 
@@ -49,19 +71,16 @@ function init() {
 async function newEmployeeQuestions() {
     try {
         const employeeInfo = await inquirer.prompt(employeeQuestions)
-        console.log(employeeInfo);
+        // console.log(employeeInfo);
         let role = employeeInfo.role;
 
         if (role === "Manager") {
-            console.log(chalk.red("Add A New Manager!"))
             newManager(employeeInfo);
         } else if (role === "Engineer") {
-            console.log(chalk.yellow("Add A New Engineer!"))
+            newEngineer(employeeInfo);
         } else if (role === "Intern") {
-            console.log(chalk.green("Add A New Intern"))
-        } else if (role === "All Done") {
-            console.log(chalk.magenta("Printing Team!"))
-        }
+            newIntern(employeeInfo);
+        } 
     } catch (error) {
         console.log("Error")
         }
@@ -70,15 +89,59 @@ async function newEmployeeQuestions() {
     
 
 async function newManager(employeeInfo) {
+    console.log(chalk.red("Add A New Manager!"))
     const office = await inquirer.prompt(managerQuestions);
-    employeeInfo.officeNumber = office.number;
-    console.log(employeeInfo);
+    Object.assign(employeeInfo, office);
+
+    const done = await inquirer.prompt(continueQuestion);
+
+    if (done.add !== "Yes") {
+        employees.push(employeeInfo);
+        console.log(employees);
+        return;
+    } else {
+        employees.push(employeeInfo);
+        console.log(employees);
+        newEmployeeQuestions();
+    }
 }
 
-async function newengineer() {
+async function newEngineer(employeeInfo) {
+    console.log(chalk.yellow("Add A New Engineer!"))
+    const github = await inquirer.prompt(engineerQuestions);
+    Object.assign(employeeInfo, github);
+
+    const done = await inquirer.prompt(continueQuestion);
+
+    if (done.add !== "Yes") {
+        employees.push(employeeInfo);
+        console.log(employees);
+        return;
+    } else {
+        employees.push(employeeInfo);
+        console.log(employees);
+        newEmployeeQuestions();
+    }
+    
 }
 
-async function newIntern() {}
+async function newIntern(employeeInfo) {
+    console.log(chalk.green("Add A New Intern"))
+    const school = await inquirer.prompt(internQuestions);
+    Object.assign(employeeInfo, school);
+
+    const done = await inquirer.prompt(continueQuestion);
+
+    if (done.add !== "Yes") {
+        employees.push(employeeInfo);
+        console.log(employees);
+        return;
+    } else {
+        employees.push(employeeInfo);
+        console.log(employees);
+        newEmployeeQuestions();
+    }
+}
 
 
 // After the user has input all employees desired, call the `render` function (required
