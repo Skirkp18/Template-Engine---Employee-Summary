@@ -4,15 +4,81 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const chalk = require("Chalk");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const employeeQuestions = [
+    {
+        message: "Add Employee Name",
+        name: "name"
+    },
+    {
+        message: "Add Employee ID",
+        name: "id"
+    },
+    {
+        message: "Add Employee Email",
+        name: "email"
+    },
+    {
+        type: 'list', name: 'role', message:'Add New Employess Role', choices: ["Manager", "Engineer", "Intern"]
+    }
+]
+
+const managerQuestions = [ 
+    {
+        message: "What is this Managers office number?",
+        name: "number"
+    }
+]
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+
+function init() {
+    console.log(chalk.blue("Start Building Your Team!"))
+    newEmployeeQuestions()
+    // .then(roleQuestion())
+}
+
+async function newEmployeeQuestions() {
+    try {
+        const employeeInfo = await inquirer.prompt(employeeQuestions)
+        console.log(employeeInfo);
+        let role = employeeInfo.role;
+
+        if (role === "Manager") {
+            console.log(chalk.red("Add A New Manager!"))
+            newManager(employeeInfo);
+        } else if (role === "Engineer") {
+            console.log(chalk.yellow("Add A New Engineer!"))
+        } else if (role === "Intern") {
+            console.log(chalk.green("Add A New Intern"))
+        } else if (role === "All Done") {
+            console.log(chalk.magenta("Printing Team!"))
+        }
+    } catch (error) {
+        console.log("Error")
+        }
+
+}
+    
+
+async function newManager(employeeInfo) {
+    const office = await inquirer.prompt(managerQuestions);
+    employeeInfo.officeNumber = office.number;
+    console.log(employeeInfo);
+}
+
+async function newengineer() {
+}
+
+async function newIntern() {}
 
 
 // After the user has input all employees desired, call the `render` function (required
@@ -34,3 +100,5 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+init();
