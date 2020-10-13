@@ -19,4 +19,4 @@ class Manager extends Employee {
 
 module.exports = Manager;
 
-const employ1 = new Manager("Sean", 100, "Skirkp18@gmail.com", "100");
+// const employ1 = new Manager("Sean", 100, "Skirkp18@gmail.com", "100");

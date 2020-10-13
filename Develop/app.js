@@ -64,82 +64,89 @@ const continueQuestion = [
 
 function init() {
     console.log(chalk.blue("Start Building Your Team!"))
+    console.log(chalk.blue("(Must add at least 1 employee"))
     newEmployeeQuestions()
-    // .then(roleQuestion())
 }
 
 async function newEmployeeQuestions() {
     try {
         const employeeInfo = await inquirer.prompt(employeeQuestions)
         // console.log(employeeInfo);
+        let name = employeeInfo.name;
+        let id = employeeInfo.id
+        let email = employeeInfo.email;
         let role = employeeInfo.role;
 
         if (role === "Manager") {
-            newManager(employeeInfo);
+            newManager(name, id, email);
         } else if (role === "Engineer") {
-            newEngineer(employeeInfo);
+            newEngineer(name, id, email);
         } else if (role === "Intern") {
-            newIntern(employeeInfo);
+            newIntern(name, id, email);
         } 
     } catch (error) {
         console.log("Error")
         }
 
+
 }
     
 
-async function newManager(employeeInfo) {
-    console.log(chalk.red("Add A New Manager!"))
+async function newManager(name, id, email) {
     const office = await inquirer.prompt(managerQuestions);
-    Object.assign(employeeInfo, office);
+    let officeNumber = office.officeNumber;
 
-    const done = await inquirer.prompt(continueQuestion);
+    const newManger = new Manager(name, id, email, officeNumber)
+    console.log(newManger);
+    employees.push(newManger);
 
-    if (done.add !== "Yes") {
-        employees.push(employeeInfo);
-        console.log(employees);
-        return;
-    } else {
-        employees.push(employeeInfo);
-        console.log(employees);
-        newEmployeeQuestions();
-    }
+    // 
+    console.log(chalk.red("Manager Added!"))
+    // 
+
+    contQuestion(employees);
 }
 
-async function newEngineer(employeeInfo) {
-    console.log(chalk.yellow("Add A New Engineer!"))
-    const github = await inquirer.prompt(engineerQuestions);
-    Object.assign(employeeInfo, github);
+async function newEngineer(name, id, email) {
+    const account = await inquirer.prompt(engineerQuestions);
+    let github = account.github;
 
-    const done = await inquirer.prompt(continueQuestion);
+    const newEngineer = new Engineer(name, id, email, github)
+    console.log(newEngineer);
+    employees.push(newEngineer);
 
-    if (done.add !== "Yes") {
-        employees.push(employeeInfo);
-        console.log(employees);
-        return;
-    } else {
-        employees.push(employeeInfo);
-        console.log(employees);
-        newEmployeeQuestions();
-    }
+    // 
+    console.log(chalk.yellow("Engineer Added!"))
+    // 
+
+    contQuestion(employees);
+}
+
+async function newIntern(name, id, email) {
+    const education = await inquirer.prompt(internQuestions);
+    let school = education.school;
+
+    const newIntern = new Intern(name, id, email, school)
+    console.log(newIntern);
+    employees.push(newIntern);
+
+    // 
+    console.log(chalk.green("Intern Added"))
+    // 
+
+    contQuestion(employees);
+}
+
+async function contQuestion(employees) {
     
-}
-
-async function newIntern(employeeInfo) {
-    console.log(chalk.green("Add A New Intern"))
-    const school = await inquirer.prompt(internQuestions);
-    Object.assign(employeeInfo, school);
-
     const done = await inquirer.prompt(continueQuestion);
 
     if (done.add !== "Yes") {
-        employees.push(employeeInfo);
-        console.log(employees);
-        return;
+    const html = render(employees);
+    writeToFile(html);
+
     } else {
-        employees.push(employeeInfo);
-        console.log(employees);
-        newEmployeeQuestions();
+        newEmployeeQuestions(employees);
     }
 }
 
@@ -148,11 +155,19 @@ async function newIntern(employeeInfo) {
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
 
+
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
+
+function writeToFile(html) {
+    fs.writeFile("output/team.html", html, (err) => {
+        if (err) throw err;
+        console.log('Team HTML Page Generated! Check "output" folder');
+      });
+}
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on

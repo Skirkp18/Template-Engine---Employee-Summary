@@ -19,4 +19,4 @@ class Engineer extends Employee {
 }
 
 module.exports = Engineer;
-const employ1 = new Engineer("Sean", 201, "Skirkp18@gmail.com", "Skirkp18");
+// const employ1 = new Engineer("Sean", 201, "Skirkp18@gmail.com", "Skirkp18");
